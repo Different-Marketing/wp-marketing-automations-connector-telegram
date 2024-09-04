@@ -13,7 +13,7 @@
 
 ## Требования
 
-- WordPress 4.9 или выше
+- WordPress 6.6 или выше
 - Autonami Marketing Automations
 - Активная учетная запись Telegram
 

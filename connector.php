@@ -32,7 +32,7 @@ class BWFCO_TELEGRAM extends BWF_CO {
     /**
      * Returns an instance of the class.
      *
-     * @return BWFCO_SMSCRU
+     * @return BWFCO_TELEGRAM
      */
     public static function get_instance() {
         if (null === self::$instance) {
@@ -96,10 +96,10 @@ class BWFCO_TELEGRAM extends BWF_CO {
         $password = isset($posted_data['password']) ? $posted_data['password'] : '';
 
         WFCO_TELEGRAM_Common::set_headers($login, $password);
-
+        // TODO: Test phone number
         $call_class = new WFCO_TELEGRAM_Call();
         $call_class->set_data(array(
-            'phone'   => '79119387283', // Test phone number
+            'phone'   => '79119387283', 
             'message' => 'Test message',
         ));
 
@@ -130,7 +130,7 @@ class BWFCO_TELEGRAM extends BWF_CO {
     public function add_card($available_connectors) {
         $available_connectors['autonami']['connectors']['bwfco_telegram'] = array(
             'name'            => 'Telegram',
-            'desc'            => __('Send medssage via Telegram', 'autonami-automations-connectors'),
+            'desc'            => __('Send message via Telegram', 'autonami-automations-connectors'),
             'connector_class' => 'BWFCO_TELEGRAM',
             'image'           => $this->get_image(),
             'source'          => '',

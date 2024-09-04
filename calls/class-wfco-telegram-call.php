@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class WFCO_Telegram_Call {
+class WFCO_Telegram_Call extends WFCO_Call {
 
     protected $data = array();
 

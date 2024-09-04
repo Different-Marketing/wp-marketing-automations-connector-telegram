@@ -4,15 +4,23 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
 
     private static $ins = null;
-    protected $connector_slug = 'bwfco_smscru';
+    protected $connector_slug = 'bwfco_telegram';
     protected $need_connector = true;
 
+    /**
+     * Initialize the class
+     *
+     * Sets the action name and description
+     * Sets the support for versions
+     *
+     * @return void
+     */
     private function __construct() {
         $this->action_dir = __DIR__;
         $this->nice_name  = __( 'Telegram', 'autonami-automations-connectors' );
         $this->group_name = __( 'Messaging', 'autonami-automations-connectors' );
         $this->group_slug = 'messaging';
-        $this->priority   = 55;
+        $this->priority   = 65;
 
         add_filter( 'bwfan_sms_services', array( $this, 'add_as_sms_service' ), 10, 1 );
     }
@@ -28,6 +36,7 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
         }
         return self::$ins;
     }
+    /**
     public function send( $recipient, $message ) {
         $endpoint = 'messages';
         $data = array(
@@ -37,7 +46,7 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
 
         return $this->make_request( $endpoint, 'POST', $data );
     }
-
+    **/
     
     /**
      * Sets the connector slug for the given action object.
@@ -107,7 +116,7 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
         }
 
         if ( isset( $args['is_test'] ) && ! empty( $args['is_test'] ) ) {
-            $smscru_ins = BWFAN_Telegram_Send_Sms::get_instance();
+            $smscru_ins = BWFAN_Telegram_Send_Msg::get_instance();
             $smscru_ins->set_progress( true );
         }
 

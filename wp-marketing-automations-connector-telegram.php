@@ -14,9 +14,7 @@
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 final class WFCO_TELEGRAM {
-     /**
-     * @var WFCO_SMSCRU
-     */
+
     public static $_instance = null;
 
     private function __construct() {
@@ -30,9 +28,12 @@ final class WFCO_TELEGRAM {
     // Определение констант
     public function define_plugin_properties() {
         define( 'WFCO_TELEGRAM_CONNECTOR_VERSION', '1.0.0' );
+        define( 'WFCO_TELEGRAM_FULL_NAME', 'Autonami Marketing Automations Connectors : Telegram' );
         define( 'WFCO_TELEGRAM_CONNECTOR_FILE', __FILE__ );
         define( 'WFCO_TELEGRAM_CONNECTOR_DIR', __DIR__ );
-        define( 'WFCO_TELEGRAM_CONNECTOR_URL', plugin_dir_url( __FILE__ ) );
+        define( 'WFCO_TELEGRAM_CONNECTOR_URL', untrailingslashit( plugin_dir_url( WFCO_TELEGRAM_CONNECTOR_FILE ) ) );
+        define( 'WFCO_TELEGRAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+        define( 'WFCO_TELEGRAM_MAIN', 'autonami-automations-connectors' );
     }
 
     // Загрузка общих хуков
@@ -57,8 +58,8 @@ final class WFCO_TELEGRAM {
      * @since 2.0.0
      */
     public function init_telegram() {
-        require WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-common.php';
-        require WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-call.php';
+        require WFCO_TELEGRAM_CONNECTOR_DIR . '/includes/class-wfco-telegram-common.php';
+        require WFCO_TELEGRAM_CONNECTOR_DIR . '/includes/class-wfco-telegram-call.php';
     }
 
     // Загрузка классов коннектора
@@ -82,7 +83,7 @@ final class WFCO_TELEGRAM {
 
 if ( ! function_exists( 'WFCO_Telegram_Core' ) ) {
     function WFCO_Telegram_Core() {
-        return WFCO_Telegram_Core::get_instance();
+        return WFCO_Telegram::get_instance();
     }
 }
 

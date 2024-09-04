@@ -2,9 +2,10 @@
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 class WFCO_Telegram_Call {
-    protected $api_key;
-    protected $api_secret;
-    protected $base_url = 'https://api.[channel].com/v1/';
+    //protected $api_key;
+    //protected $api_secret;
+    //protected $base_url = 'https://api.[channel].com/v1/';
+    protected $data = array();
 
 
     /**
@@ -63,14 +64,17 @@ class WFCO_Telegram_Call {
      *
      * @since 1.0.0
      *
-     * @return array An associative array containing the result of the call.
-     *               The array will have a 'status' key with a boolean value,
-     *               a 'message' key with a string value, and a 'data' key with
-     *               an array of the response from SMSC.ru.
+     * @return array 
+     * 
+     * An associative array containing the result of the call.
+     * The array will have a 'status' key with a boolean value,
+     * a 'message' key with a string value, and a 'data' key with
+     * an array of the response from SMSC.ru.
+     * 
      */
     public function process() {
-        $endpoint = WFCO_SMSCRU_Common::get_api_endpoint();
-        $headers = WFCO_SMSCRU_Common::get_headers();
+        $endpoint = WFCO_Telegram_Common::get_api_endpoint();
+        $headers = WFCO_Telegram_Common::get_headers();
 
         $body = array(
             'phones'  => $this->data['phone'],

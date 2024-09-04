@@ -60,7 +60,6 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
         $action_object->connector = $this->connector_slug;
     }
 
-
     /**
      * Adds the current connector as a SMS service.
      *

@@ -3,7 +3,7 @@
  * Plugin Name: Autonami Marketing Automations Connectors - telegram
  * Plugin URI: https://my.mamatov.club
  * Description: telegram integration for Autonami Marketing Automations
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Evgenii Rezanov, Mikhail Kuznetsov
  * Author URI: https://my.mamatov.club
  * Text Domain: woofunnels-telegram-connector
@@ -27,11 +27,11 @@ final class WFCO_TELEGRAM {
 
     // Определение констант
     public function define_plugin_properties() {
-        define( 'WFCO_TELEGRAM_CONNECTOR_VERSION', '1.1.0' );
+        define( 'WFCO_TELEGRAM_VERSION', '1.1.1' );
         define( 'WFCO_TELEGRAM_FULL_NAME', 'Autonami Marketing Automations Connectors : Telegram' );
-        define( 'WFCO_TELEGRAM_CONNECTOR_FILE', __FILE__ );
-        define( 'WFCO_TELEGRAM_CONNECTOR_DIR', __DIR__ );
-        define( 'WFCO_TELEGRAM_CONNECTOR_URL', untrailingslashit( plugin_dir_url( WFCO_TELEGRAM_CONNECTOR_FILE ) ) );
+        define( 'WFCO_TELEGRAM_PLUGIN_FILE', __FILE__ );
+        define( 'WFCO_TELEGRAM_PLUGIN_DIR', __DIR__ );
+        define( 'WFCO_TELEGRAM_PLUGIN_URL', untrailingslashit( plugin_dir_url( WFCO_TELEGRAM_PLUGIN_FILE ) ) );
         define( 'WFCO_TELEGRAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
         define( 'WFCO_TELEGRAM_MAIN', 'autonami-automations-connectors' );
     }
@@ -58,15 +58,15 @@ final class WFCO_TELEGRAM {
      * @since 2.0.0
      */
     public function init_telegram() {
-        require WFCO_TELEGRAM_CONNECTOR_DIR . '/includes/class-wfco-telegram-common.php';
-        require WFCO_TELEGRAM_CONNECTOR_DIR . '/includes/class-wfco-telegram-call.php';
+        require WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-common.php';
+        require WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-call.php';
     }
 
     // Загрузка классов коннектора
     public function load_connector_classes() {
         require_once( WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-common.php' );
         require_once( WFCO_TELEGRAM_PLUGIN_DIR . '/includes/class-wfco-telegram-call.php' );
-        require_once( WFCO_TELAGRAM_PLUGIN_DIR . '/connector.php' );
+        require_once( WFCO_TELEGRAM_PLUGIN_DIR . '/connector.php' );
 
         do_action( 'wfco_telegram_connector_loaded', $this );
     }

@@ -15,7 +15,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
      * @return void
      */
     public function __construct() {
-        $this->action_name = __( 'Send Message', 'autonami-automations-connectors' );
+        $this->action_name = __( 'Send Telegram Message', 'autonami-automations-connectors' );
         $this->action_desc = __( 'This action sends a message via Telegram', 'autonami-automations-connectors' );
         $this->support_v2  = true;
         $this->support_v1  = false;
@@ -24,7 +24,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
     /**
      * Returns the instance of the class.
      *
-     * @return BWFAN_SMSCRU_Send_Sms
+     * @return BWFAN_Telegram_Send_Sms
      * @since 1.0.0
      */
     public static function get_instance() {
@@ -161,7 +161,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
         $this->data['text'] = BWFAN_Connectors_Common::modify_sms_body( $this->data['text'], $this->data );
         // Validate connector
         $load_connector = WFCO_Load_Connectors::get_instance();
-        $call_class     = $load_connector->get_call( 'wfco_telegram_send_sms' );
+        $call_class     = $load_connector->get_call( 'wfco_telegram_send_msg' );
         if ( is_null( $call_class ) ) {
             $this->progress = false;
             return array(
@@ -194,7 +194,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
         );
     }
 
-   /**
+/**
     * Handle response for V2
     *
     * @param array $response V2 response.
@@ -215,7 +215,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
     }
 
     /**
-     * Returns an array of field schema for the SMSC.ru connector.
+     * Returns an array of field schema for the Telegram connector.
      *
      * The schema includes fields for recipient phone number and message body,
      * each with their respective labels, types, classes, and placeholders. Both

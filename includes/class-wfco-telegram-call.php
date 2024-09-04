@@ -1,4 +1,5 @@
 <?php
+
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 class WFCO_Telegram_Call {
@@ -43,8 +44,6 @@ class WFCO_Telegram_Call {
 
         return json_decode( wp_remote_retrieve_body( $response ), true );
     }
-
-    protected $data = array();
 
     /**
      * Set data for the call

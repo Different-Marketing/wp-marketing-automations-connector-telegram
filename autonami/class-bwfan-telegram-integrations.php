@@ -34,10 +34,10 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
         if ( null === self::$ins ) {
             self::$ins = new self();
         }
+
         return self::$ins;
     }
-    /**
-    public function send( $recipient, $message ) {
+    public function send_message( $recipient, $message ) {
         $endpoint = 'messages';
         $data = array(
             'recipient' => $recipient,
@@ -46,7 +46,6 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
 
         return $this->make_request( $endpoint, 'POST', $data );
     }
-    **/
     
     /**
      * Sets the connector slug for the given action object.
@@ -91,8 +90,9 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
      * }
      *
      * @return WP_Error|bool Whether the message was sent or not.
+     * 
      */
-    public function send_message( $args ) {
+    public function send_msg( $args ) {
         $args = wp_parse_args( $args, array(
             'to'        => '',
             'body'      => '',

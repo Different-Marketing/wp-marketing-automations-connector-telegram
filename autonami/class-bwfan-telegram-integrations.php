@@ -127,7 +127,7 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
         );
 
         $load_connectors = WFCO_Load_Connectors::get_instance();
-        $call            = $load_connectors->get_call( 'wfco_telegram_send_sms' );
+        $call            = $load_connectors->get_call( 'wfco_telegram_send_message' );
 
         $call->set_data( $call_args );
 

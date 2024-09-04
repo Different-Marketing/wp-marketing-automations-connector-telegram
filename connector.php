@@ -95,7 +95,7 @@ class BWFCO_TELEGRAM extends BWF_CO {
         $login    = isset($posted_data['login']) ? $posted_data['login'] : '';
         $password = isset($posted_data['password']) ? $posted_data['password'] : '';
 
-        WFCO_TELEGRAM_Common::set_headers($login, $password);
+        //WFCO_TELEGRAM_Common::set_headers($login, $password);
         // TODO: Test phone number
         $call_class = new WFCO_TELEGRAM_Call();
         $call_class->set_data(array(

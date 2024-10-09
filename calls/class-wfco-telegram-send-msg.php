@@ -3,13 +3,11 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 class WFCO_Telegram_Send_Msg extends WFCO_Call {
     private static $ins = null;
-    //protected $api_key;
-    //protected $api_secret;
-    //protected $base_url = 'https://api.[channel].com/v1/';
+    protected $api_key;
+    protected $base_url = 'https://api.telegram.org/bot';
 
     public function __construct() {
-        $this->api_key = WFCO_telegram_Common::get_api_key();
-        $this->api_secret = WFCO_telegram_Common::get_api_secret();
+        $this->api_key = WFCO_Telegram_Common::get_api_key();
     }
 
     public static function get_instance() {
@@ -20,29 +18,30 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
     }
 
     public function process() {
-        $params = array(
-            'login'    => $this->data['login'],
-            'psw'      => $this->data['password'],
-            'phones'   => '79119387283',
-            'mes'      => 'TEST',
-            'charset'  => 'utf-8',
-            'fmt'      => 3, // JSON response format
-            'cost'     => 3, // Return cost info
+        $endpoint = 'sendMessage';
+            if (empty($this->api_key)) {
+                error_log('Telegram API key is missing');
+                return new WP_Error('api_key_missing', 'Telegram API key is missing');
+            }
+            $url = $this->base_url . $this->api_key . '/' . $endpoint;
+
+        $body = array(
+            'chat_id' => isset($this->data['chat_id']) ? $this->data['chat_id'] : '',
+            'text'    => isset($this->data['message']) ? $this->data['message'] : '',
         );
 
-        if (!empty($this->data['sender'])) {
-            $params['sender'] = $this->data['sender'];
-        }
+        error_log('Telegram API request params: ' . print_r($params, true));
 
-        if (!empty($this->data['translit'])) {
-            $params['translit'] = $this->data['translit'];
-        }
+        $args = array(
+            'body'    => $body,
+            'method'  => 'POST',
+            'timeout' => 30,
+        );
 
-        //$url = add_query_arg($params, $this->api_endpoint);
-
-        $response = wp_remote_get($url);
+        $response = wp_remote_post($url, $args);
 
         if (is_wp_error($response)) {
+            error_log('Telegram API error: ' . $response->get_error_message());
             return array(
                 'status' => false,
                 'message' => $response->get_error_message(),
@@ -52,42 +51,22 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
         $body = wp_remote_retrieve_body($response);
         $result = json_decode($body, true);
 
-        if (isset($result['error'])) {
+        error_log('Telegram API response: ' . print_r($result, true));
+
+        if (isset($result['ok']) && $result['ok'] === true) {
+            return array(
+                'status' => true,
+                'message' => 'Message sent successfully',
+                'data' => $result,
+            );
+        } else {
             return array(
                 'status' => false,
-                'message' => $result['error'],
+                'message' => isset($result['description']) ? $result['description'] : 'Unknown error occurred',
+                'data' => $result,
             );
         }
-
-        return array(
-            'status' => true,
-            'message' => 'Message sent successfully',
-            'data' => $result,
-        );
-    }
-
-    protected function make_request( $endpoint, $method = 'GET', $data = array() ) {
-        $url = $this->base_url . $endpoint;
-
-        $args = array(
-            'method'  => $method,
-            'headers' => array(
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'Content-Type'  => 'application/json',
-            ),
-        );
-
-        if ( ! empty( $data ) ) {
-            $args['body'] = wp_json_encode( $data );
-        }
-
-        $response = wp_remote_request( $url, $args );
-
-        if ( is_wp_error( $response ) ) {
-            return $response;
-        }
-
-        return json_decode( wp_remote_retrieve_body( $response ), true );
     }
 }
+
 return 'WFCO_Telegram_Send_Msg';

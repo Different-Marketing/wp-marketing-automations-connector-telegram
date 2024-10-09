@@ -1,41 +1,44 @@
 <?php
 $saved_data = WFCO_Common::$connectors_saved_data;
 $old_data   = ( isset( $saved_data[ $this->get_slug() ] ) && is_array( $saved_data[ $this->get_slug() ] ) && count( $saved_data[ $this->get_slug() ] ) > 0 ) ? $saved_data[ $this->get_slug() ] : array();
-$login      = isset( $old_data['login'] ) ? $old_data['login'] : '';
-$password   = isset( $old_data['password'] ) ? $old_data['password'] : '';
+$bot_token  = isset( $old_data['bot_token'] ) ? $old_data['bot_token'] : '';
+$chat_id    = isset( $old_data['chat_id'] ) ? $old_data['chat_id'] : '';
+$default_message = isset( $old_data['default_message'] ) ? $old_data['default_message'] : '';
 ?>
 <div class="wfco-telegram-wrap">
     <div class="wfco-form-group featured field-input">
-        <label for="automation-name"><?php echo esc_html__( 'Enter Login', 'autonami-automations-connectors' ); ?></label>
+        <label for="bot_token"><?php echo esc_html__( 'Bot Token', 'autonami-automations-connectors' ); ?></label>
         <div class="field-wrap">
-            <div class="wrapper">
-                <input type="text" name="login" placeholder="<?php echo esc_attr__( 'Enter Secret Login', 'autonami-automations-connectors' ); ?>" class="form-control wfco_smscru_login" required value="<?php echo esc_attr( $login ); ?>">
-            </div>
+            <input type="text" name="bot_token" id="bot_token" value="<?php echo esc_attr( $bot_token ); ?>" class="wfco-input" placeholder="<?php echo esc_attr__( 'Enter Telegram Bot Token', 'autonami-automations-connectors' ); ?>">
         </div>
     </div>
 
     <div class="wfco-form-group featured field-input">
-        <label for="automation-name"><?php echo esc_html__( 'Enter Password', 'autonami-automations-connectors' ); ?></label>
+        <label for="chat_id"><?php echo esc_html__( 'Chat ID', 'autonami-automations-connectors' ); ?></label>
         <div class="field-wrap">
-            <div class="wrapper">
-                <input type="password" name="password" placeholder="<?php echo esc_attr__( 'Enter SMSC.ru Password', 'autonami-automations-connectors' ); ?>" class="form-control wfco_smscru_password" required value="<?php echo esc_attr( $password ); ?>">
-            </div>
+            <input type="text" name="chat_id" id="chat_id" value="<?php echo esc_attr( $chat_id ); ?>" class="wfco-input" placeholder="<?php echo esc_attr__( 'Enter Telegram Chat ID', 'autonami-automations-connectors' ); ?>">
         </div>
     </div>
 
-    <div class="wfco-form-groups wfco_form_submit">
+    <div class="wfco-form-group featured field-input">
+        <label for="default_message"><?php echo esc_html__( 'Default Message', 'autonami-automations-connectors' ); ?></label>
+        <div class="field-wrap">
+            <textarea name="default_message" id="default_message" class="wfco-input" rows="5" placeholder="<?php echo esc_attr__( 'Enter default message', 'autonami-automations-connectors' ); ?>"><?php echo esc_textarea( $default_message ); ?></textarea>
+        </div>
+    </div>
+
+    <div class="wfco-form-group">
         <?php
         if ( isset( $old_data['id'] ) && (int) $old_data['id'] > 0 ) {
             ?>
             <input type="hidden" name="edit_nonce" value="<?php echo esc_attr( wp_create_nonce( 'wfco-connector-edit' ) ); ?>"/>
             <input type="hidden" name="id" value="<?php echo esc_attr( $old_data['id'] ); ?>"/>
             <input type="hidden" name="wfco_connector" value="<?php echo esc_attr( $this->get_slug() ); ?>"/>
-            <button class="wfco_save_btn_style wfco_connect_to_api"><?php esc_attr_e( 'Connect and Update', 'autonami-automations-connectors' ); ?></button>
+            <button class="wfco-save-btn wfco-connect-btn"><?php esc_html_e( 'Update', 'autonami-automations-connectors' ); ?></button>
         <?php } else { ?>
             <input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'wfco-connector' ) ); ?>">
             <input type="hidden" name="wfco_connector" value="<?php echo esc_attr( $this->get_slug() ); ?>"/>
-            <button class="wfco_save_btn_style wfco_connect_to_api"><?php esc_attr_e( 'Connect and Save', 'autonami-automations-connectors' ); ?></button>
+            <button class="wfco-save-btn wfco-connect-btn"><?php esc_html_e( 'Connect', 'autonami-automations-connectors' ); ?></button>
         <?php } ?>
     </div>
-    <div class="wfco_form_response" style="text-align: center;font-size: 15px;margin-top: 10px;"></div>
 </div>

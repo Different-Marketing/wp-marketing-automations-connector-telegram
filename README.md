@@ -52,21 +52,28 @@
 
 ## Структура файлов плагина
 
-```
+
 wp-marketing-automations-connector-telegram/
-├── wp-marketing-automations-connector-telegram.php
-├── connector.php
-├── includes/
-│   ├── class-wfco-telegram-common.php
-│   └── class-wfco-telegram-call.php
-├── calls/
-│   └── class-wfco-telegram-send-message.php
+│
 ├── autonami/
-│   ├── class-bwfan-telegram-integrations.php
+│   ├── class-bwfan-telegram-integration.php
 │   └── class-bwfan-telegram-send-message.php
-└── views/
-    └── settings.php
-    └── logo.png
-```
+│
+├── calls/
+│   ├── class-wfco-telegram-send-message.php
+│   └── class-wfco-telegram-get-bot-info.php
+│
+├── includes/
+│   ├── class-wfco-telegram-call.php
+│   └── class-wfco-telegram-common.php
+│
+├── views/
+│   ├── settings.php
+│   └── logo.png
+│
+├── connector.php
+├── README.md
+└── wp-marketing-automations-connector-telegram.php
+
 
 ### Описание основных файлов и функций

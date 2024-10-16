@@ -30,7 +30,7 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
             'text'    => isset($this->data['message']) ? $this->data['message'] : '',
         );
 
-        error_log('Telegram API request params: ' . print_r($params, true));
+        error_log('Telegram API request params: ' . print_r($body, true));
 
         $args = array(
             'body'    => $body,

@@ -107,23 +107,16 @@ final class BWFAN_Telegram_Integration extends BWFAN_Integration  {
 
         WFCO_Common::get_connectors_data();
         $settings = WFCO_Common::$connectors_saved_data[ $this->get_connector_slug() ];
-        $login    = $settings['login'];
-        $password = $settings['password'];
+        $chat_id  = $settings['chat_id'];
+        $bot_token = $settings['bot_token'];
 
-        if ( empty( $login ) || empty( $password ) ) {
+        if ( empty( $chat_id ) || empty( $bot_token ) ) {
             return new WP_Error( 404, 'Invalid / Missing saved connector data' );
         }
-
-        if ( isset( $args['is_test'] ) && ! empty( $args['is_test'] ) ) {
-            $smscru_ins = BWFAN_Telegram_Send_Msg::get_instance();
-            $smscru_ins->set_progress( true );
-        }
-
         $call_args = array(
-            'login'    => $login,
-            'password' => $password,
-            'text'     => $body,
-            'number'   => $to,
+            'bot_token' => $settings['bot_token'], // Предполагается, что токен бота хранится в настройках
+            'chat_id'   => $to,
+            'text'      => $body,
         );
 
         $load_connectors = WFCO_Load_Connectors::get_instance();

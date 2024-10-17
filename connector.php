@@ -117,6 +117,7 @@ class BWFCO_TELEGRAM extends BWF_CO {
         
         
         if (isset($response['ok']) && $response['ok'] === true) {
+
             error_log('Bot Token is valid.');
 
             return array(
@@ -128,7 +129,9 @@ class BWFCO_TELEGRAM extends BWF_CO {
                 ),
             );
         } else {
+            
             error_log('Bot Token is invalid.');
+
             return array(
                 'status'  => 'failed',
                 'message' => isset($response['description']) ? $response['description'] : __('Failed to connect to Telegram API', 'autonami-automations-connectors'),

@@ -1,5 +1,4 @@
 <?php
-
 defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 class WFCO_Telegram_Call {
@@ -8,15 +7,20 @@ class WFCO_Telegram_Call {
     protected $data = array();
 
     /**
-     * Initializes the Telegram API key for the WFCO_Telegram_Call class.
-     *
-     * This constructor sets the `$api_key` property of the class by retrieving the
-     * Telegram API key from the `WFCO_Telegram_Common::get_api_key()` function.
+     * Constructor: initializes the API key
      */
     public function __construct() {
         $this->api_key = WFCO_Telegram_Common::get_api_key();
     }
 
+    /**
+     * Makes a request to the Telegram API
+     *
+     * @param string $endpoint API endpoint
+     * @param string $method HTTP method (GET or POST)
+     * @param array $data Request data
+     * @return array|WP_Error API response or error
+     */
     protected function make_request( $endpoint, $method = 'POST', $data = array() ) {
         if (empty($this->api_key)) {
             error_log('Telegram API key is missing');
@@ -49,71 +53,45 @@ class WFCO_Telegram_Call {
         return json_decode( wp_remote_retrieve_body( $response ), true );
     }
 
+    /**
+     * Sets the data for the API call
+     *
+     * @param array $data API call data
+     */
     public function set_data($data) {
         $this->data = $data;
     }
 
+    /**
+     * Processes the API call
+     *
+     * @return array API response
+     */
     public function process() {
-        $endpoint = 'sendMessage';
+        $method = isset($this->data['method']) ? $this->data['method'] : 'sendMessage';
 
-        error_log(print_r($this->data, true)); //PHP Warning:  Undefined variable $data
+        error_log('Processing Telegram API call: ' . $method);
+        error_log('Call data: ' . print_r($this->data, true));
 
-        $bot_token = isset($this->data['bot_token']) ? $this->data['bot_token'] : '';
-        $chat_id = isset($this->data['chat_id']) ? $this->data['chat_id'] : '';
-        $message = isset($this->data['default_message']) ? $this->data['default_message'] : '';
-
-        // Добавленный отладочный код
-        error_log('Telegram Bot Token: ' . $bot_token);
-        error_log('Telegram Chat ID: ' . $chat_id);
-        error_log('Telegram Message: ' . $message);
-        error_log('Telegram API Key: ' . $this->api_key);
-
-        if (empty($bot_token)) {
-            error_log('Telegram bot token is missing');
-            return array(
-                'status' => 'error',
-                'message' => 'Bot Token is missing',
-                'api_data' => array(),
+        if ($method === 'getMe') {
+            $response = $this->make_request('getMe', 'GET');
+        } else {
+            $body = array(
+                'chat_id' => isset($this->data['chat_id']) ? $this->data['chat_id'] : '',
+                'text'    => isset($this->data['message']) ? $this->data['message'] : '',
             );
-        }
-/*
-        if (empty($chat_id)) {
-            error_log('Telegram chat_id is missing');
-            return array(
-                'status' => 'error',
-                'message' => 'Chat ID is missing',
-                'api_data' => array(),
-            );
-        }
 
-        if (empty($message)) {
-            error_log('Telegram message is missing');
-            return array(
-                'status' => 'error',
-                'message' => 'Message is missing',
-                'api_data' => array(),
-            );
-        }
-*/
-        $this->api_key = $bot_token;
+            // Remove empty fields
+            $body = array_filter($body);
 
-        $body = array(
-            'chat_id' => $chat_id,
-            'text'    => $message,
-        );
+            if (empty($body['text'])) {
+                return array(
+                    'status'   => 'error',
+                    'message'  => 'Message text is empty',
+                );
+            }
 
-        // Если метод getMe, не нужно отправлять chat_id и text
-        if ($endpoint === 'getMe') {
-            $body = array();
-        }
-
-        $response = $this->make_request($endpoint, 'POST', $body);
-
-        if (is_wp_error($response)) {
-            return array(
-                'status'   => 'error',
-                'message'  => $response->get_error_message(),
-            );
+            $response = $this->make_request('sendMessage', 'POST', $body);
         }
 
         if (isset($response['ok']) && $response['ok'] === true) {

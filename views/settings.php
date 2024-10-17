@@ -1,9 +1,13 @@
 <?php
 $saved_data = WFCO_Common::$connectors_saved_data;
+error_log('view---Telegram saved data: ' . print_r($saved_data, true));
 $old_data   = ( isset( $saved_data[ $this->get_slug() ] ) && is_array( $saved_data[ $this->get_slug() ] ) && count( $saved_data[ $this->get_slug() ] ) > 0 ) ? $saved_data[ $this->get_slug() ] : array();
 $bot_token  = isset( $old_data['bot_token'] ) ? $old_data['bot_token'] : '';
 $chat_id    = isset( $old_data['chat_id'] ) ? $old_data['chat_id'] : '';
 $default_message = isset( $old_data['default_message'] ) ? $old_data['default_message'] : '';
+error_log('view---Bot Token: ' . $bot_token);
+error_log('view---Chat ID: ' . $chat_id);
+error_log('view---Default Message: ' . $default_message);
 ?>
 <div class="wfco-telegram-wrap">
     <div class="wfco-form-group featured field-input">

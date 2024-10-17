@@ -7,6 +7,12 @@ class WFCO_Telegram_Call {
     protected $base_url = 'https://api.telegram.org/bot';
     protected $data = array();
 
+    /**
+     * Initializes the Telegram API key for the WFCO_Telegram_Call class.
+     *
+     * This constructor sets the `$api_key` property of the class by retrieving the
+     * Telegram API key from the `WFCO_Telegram_Common::get_api_key()` function.
+     */
     public function __construct() {
         $this->api_key = WFCO_Telegram_Common::get_api_key();
     }
@@ -50,9 +56,17 @@ class WFCO_Telegram_Call {
     public function process() {
         $endpoint = 'sendMessage';
 
+        error_log(print_r($this->data, true)); //PHP Warning:  Undefined variable $data
+
         $bot_token = isset($this->data['bot_token']) ? $this->data['bot_token'] : '';
         $chat_id = isset($this->data['chat_id']) ? $this->data['chat_id'] : '';
         $message = isset($this->data['default_message']) ? $this->data['default_message'] : '';
+
+        // Добавленный отладочный код
+        error_log('Telegram Bot Token: ' . $bot_token);
+        error_log('Telegram Chat ID: ' . $chat_id);
+        error_log('Telegram Message: ' . $message);
+        error_log('Telegram API Key: ' . $this->api_key);
 
         if (empty($bot_token)) {
             error_log('Telegram bot token is missing');
@@ -62,7 +76,7 @@ class WFCO_Telegram_Call {
                 'api_data' => array(),
             );
         }
-
+/*
         if (empty($chat_id)) {
             error_log('Telegram chat_id is missing');
             return array(
@@ -80,7 +94,7 @@ class WFCO_Telegram_Call {
                 'api_data' => array(),
             );
         }
-
+*/
         $this->api_key = $bot_token;
 
         $body = array(
@@ -88,29 +102,31 @@ class WFCO_Telegram_Call {
             'text'    => $message,
         );
 
+        // Если метод getMe, не нужно отправлять chat_id и text
+        if ($endpoint === 'getMe') {
+            $body = array();
+        }
+
         $response = $this->make_request($endpoint, 'POST', $body);
 
         if (is_wp_error($response)) {
             return array(
                 'status'   => 'error',
                 'message'  => $response->get_error_message(),
-                'api_data' => array(),
             );
         }
 
         if (isset($response['ok']) && $response['ok'] === true) {
             return array(
                 'status'   => 'success',
-                'message'  => __('Message sent successfully', 'autonami-automations-connectors'),
+                'message'  => __('Operation completed successfully', 'autonami-automations-connectors'),
                 'data'     => $response,
-                'api_data' => $response,
             );
         } else {
             return array(
                 'status'   => 'error',
                 'message'  => isset($response['description']) ? $response['description'] : __('Unknown error occurred', 'autonami-automations-connectors'),
                 'data'     => $response,
-                'api_data' => $response,
             );
         }
     }

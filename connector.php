@@ -98,56 +98,17 @@ class BWFCO_TELEGRAM extends BWF_CO {
      * @param array $posted_data The data posted from the connector settings form.
      * @return array An array containing the API data or an error message.
      */
-    protected function get_api_data_tmp($posted_data) {
-        $bot_token = isset($posted_data['bot_token']) ? $posted_data['bot_token'] : '';
-        $chat_id = isset($posted_data['chat_id']) ? $posted_data['chat_id'] : '';
-        $default_message = isset($posted_data['default_message']) ? $posted_data['default_message'] : '';
-    
-        error_log('Telegram posted data: ' . print_r($posted_data, true));
-
-        $call_class = new WFCO_TELEGRAM_Call();
-        $call_class->set_data(array(
-            'bot_token' => $bot_token,
-            'method'    => 'getMe',
-            'chat_id'   => $chat_id,
-            'message'   => $default_message,
-        ));
-    
-        $response = $call_class->process();
-        
-        
-        if (isset($response['ok']) && $response['ok'] === true) {
-
-            error_log('Bot Token is valid.');
-
-            return array(
-                'status'   => 'success',
-                'api_data' => array(
-                    'bot_token'        => $bot_token,
-                    'chat_id'          => $chat_id,
-                    'default_message'  => $default_message,
-                ),
-            );
-        } else {
-            
-            error_log('Bot Token is invalid.');
-
-            return array(
-                'status'  => 'failed',
-                'message' => isset($response['description']) ? $response['description'] : __('Failed to connect to Telegram API', 'autonami-automations-connectors'),
-            );
-        }
-    }
-    
     protected function get_api_data($posted_data) {
         $bot_token = isset($posted_data['bot_token']) ? $posted_data['bot_token'] : '';
         $chat_id = isset($posted_data['chat_id']) ? $posted_data['chat_id'] : '';
         $default_message = isset($posted_data['default_message']) ? $posted_data['default_message'] : '';
     
+        error_log('BWFCO_TELEGRAM get_api_data called with data: ' . print_r($posted_data, true));
+    
         // Сохраняем bot_token в опциях WordPress
         update_option('wfco_telegram_bot_token', $bot_token);
     
-        $call_class = new WFCO_TELEGRAM_Call();
+        $call_class = new WFCO_Telegram_Call();
         $call_class->set_data(array(
             'bot_token' => $bot_token,
             'method'    => 'getMe',
@@ -155,9 +116,11 @@ class BWFCO_TELEGRAM extends BWF_CO {
     
         $response = $call_class->process();
         
-        if (isset($response['ok']) && $response['ok'] === true) {
+        error_log('BWFCO_TELEGRAM get_api_data response: ' . print_r($response, true));
+    
+        if (isset($response['status']) && $response['status'] === 'success') {
             error_log('Bot Token is valid.');
-
+    
             return array(
                 'status'   => 'success',
                 'api_data' => array(
@@ -170,7 +133,7 @@ class BWFCO_TELEGRAM extends BWF_CO {
             error_log('Bot Token is invalid.');
             return array(
                 'status'  => 'failed',
-                'message' => isset($response['description']) ? $response['description'] : __('Failed to connect to Telegram API', 'autonami-automations-connectors'),
+                'message' => isset($response['message']) ? $response['message'] : __('Failed to connect to Telegram API', 'autonami-automations-connectors'),
             );
         }
     }

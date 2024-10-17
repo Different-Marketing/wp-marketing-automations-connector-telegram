@@ -11,6 +11,7 @@ class WFCO_Telegram_Call {
      */
     public function __construct() {
         $this->api_key = WFCO_Telegram_Common::get_api_key();
+        error_log('WFCO_Telegram_Call constructed with API key: ' . $this->api_key);
     }
 
     /**
@@ -30,6 +31,7 @@ class WFCO_Telegram_Call {
         $url = $this->base_url . $this->api_key . '/' . $endpoint;
 
         error_log('Telegram API endpoint: ' . $url);
+        error_log('Telegram request method: ' . $method);
         error_log('Telegram request data: ' . print_r($data, true));
 
         $args = array(
@@ -37,8 +39,11 @@ class WFCO_Telegram_Call {
             'headers' => array(
                 'Content-Type'  => 'application/json',
             ),
-            'body' => wp_json_encode( $data ),
         );
+
+        if ($method === 'POST') {
+            $args['body'] = wp_json_encode($data);
+        }
 
         $response = wp_remote_request( $url, $args );
 
@@ -47,10 +52,12 @@ class WFCO_Telegram_Call {
             return $response;
         }
 
-        error_log('Telegram API response code: ' . wp_remote_retrieve_response_code($response));
-        error_log('Telegram API response body: ' . wp_remote_retrieve_body($response));
+        $response_code = wp_remote_retrieve_response_code($response);
+        $response_body = wp_remote_retrieve_body($response);
+        error_log('Telegram API response code: ' . $response_code);
+        error_log('Telegram API response body: ' . $response_body);
 
-        return json_decode( wp_remote_retrieve_body( $response ), true );
+        return json_decode( $response_body, true );
     }
 
     /**
@@ -60,6 +67,7 @@ class WFCO_Telegram_Call {
      */
     public function set_data($data) {
         $this->data = $data;
+        error_log('Data set for WFCO_Telegram_Call: ' . print_r($this->data, true));
     }
 
     /**
@@ -84,7 +92,8 @@ class WFCO_Telegram_Call {
             // Remove empty fields
             $body = array_filter($body);
 
-            if (empty($body['text'])) {
+            if (empty($body['text']) && $method !== 'getMe') {
+                error_log('Telegram API error: Message text is empty');
                 return array(
                     'status'   => 'error',
                     'message'  => 'Message text is empty',
@@ -95,12 +104,14 @@ class WFCO_Telegram_Call {
         }
 
         if (isset($response['ok']) && $response['ok'] === true) {
+            error_log('Telegram API call successful');
             return array(
                 'status'   => 'success',
                 'message'  => __('Operation completed successfully', 'autonami-automations-connectors'),
                 'data'     => $response,
             );
         } else {
+            error_log('Telegram API call failed: ' . print_r($response, true));
             return array(
                 'status'   => 'error',
                 'message'  => isset($response['description']) ? $response['description'] : __('Unknown error occurred', 'autonami-automations-connectors'),

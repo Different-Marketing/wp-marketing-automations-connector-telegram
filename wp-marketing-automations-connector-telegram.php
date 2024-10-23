@@ -3,7 +3,7 @@
  * Plugin Name: Autonami Marketing Automations Connectors - telegram
  * Plugin URI: https://my.mamatov.club
  * Description: telegram integration for Autonami Marketing Automations
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Evgenii Rezanov, Claude.ai
  * Author URI: https://eredmonkey.link
  * Text Domain: woofunnels-telegram-connector
@@ -33,7 +33,7 @@ final class WFCO_Telegram {
     }
 
     public function define_plugin_properties() {
-        define( 'WFCO_TELEGRAM_VERSION', '1.2.4' );
+        define( 'WFCO_TELEGRAM_VERSION', '1.2.5' );
         define( 'WFCO_TELEGRAM_FULL_NAME', 'Autonami Marketing Automations Connectors : Telegram' );
         define( 'WFCO_TELEGRAM_PLUGIN_FILE', __FILE__ );
         define( 'WFCO_TELEGRAM_PLUGIN_DIR', __DIR__ );
@@ -82,9 +82,15 @@ final class WFCO_Telegram {
      */
     public function load_autonami_classes() {
         $integration_dir = WFCO_TELEGRAM_PLUGIN_DIR . '/autonami';
+        
+        foreach ( glob( $integration_dir . '/actions/*.php' ) as $_field_filename ) {
+            require_once( $_field_filename );
+        }
+
         foreach ( glob( $integration_dir . '/class-*.php' ) as $_field_filename ) {
             require_once( $_field_filename );
         }
+
         do_action( 'wfco_telegram_integrations_loaded', $this );
     }
 }

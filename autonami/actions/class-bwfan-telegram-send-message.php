@@ -194,7 +194,7 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
         );
     }
 
-/**
+    /**
     * Handle response for V2
     *
     * @param array $response V2 response.
@@ -284,4 +284,4 @@ class BWFAN_Telegram_Send_Message extends BWFAN_Action {
 
 }
 
-return 'BWFAN_Telegram_Send_Msg';
+return 'BWFAN_Telegram_Send_Message'; // было BWFAN_Telegram_Send_Msg

@@ -20,7 +20,7 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
     public function process() {
         $endpoint = 'sendMessage';
             if (empty($this->api_key)) {
-                error_log('Telegram API key is missing');
+                //error_log('Telegram API key is missing');
                 return new WP_Error('api_key_missing', 'Telegram API key is missing');
             }
             $url = $this->base_url . $this->api_key . '/' . $endpoint;
@@ -30,7 +30,7 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
             'text'    => isset($this->data['message']) ? $this->data['message'] : '',
         );
 
-        error_log('Telegram API request params: ' . print_r($body, true));
+        //error_log('Telegram API request params: ' . print_r($body, true));
 
         $args = array(
             'body'    => $body,
@@ -41,7 +41,7 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
         $response = wp_remote_post($url, $args);
 
         if (is_wp_error($response)) {
-            error_log('Telegram API error: ' . $response->get_error_message());
+            //error_log('Telegram API error: ' . $response->get_error_message());
             return array(
                 'status' => false,
                 'message' => $response->get_error_message(),
@@ -51,7 +51,7 @@ class WFCO_Telegram_Send_Msg extends WFCO_Call {
         $body = wp_remote_retrieve_body($response);
         $result = json_decode($body, true);
 
-        error_log('Telegram API response: ' . print_r($result, true));
+        //error_log('Telegram API response: ' . print_r($result, true));
 
         if (isset($result['ok']) && $result['ok'] === true) {
             return array(
